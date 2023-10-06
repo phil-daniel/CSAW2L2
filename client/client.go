@@ -1,17 +1,30 @@
 package main
 
 import (
+	"bufio"
 	"flag"
-	"net"
 	"fmt"
+	"net"
+	"os"
 )
 
 func read(conn net.Conn) {
 	//TODO In a continuous loop, read a message from the server and display it.
+	reader := bufio.NewReader(conn)
+	for {
+		msg, _ := reader.ReadString('\n')
+		fmt.Println(msg)
+	}
 }
 
 func write(conn net.Conn) {
 	//TODO Continually get input from the user and send messages to the server.
+	stdin := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Printf("Print text to sent: ")
+		msg, _ := stdin.ReadString('\n')
+		fmt.Fprintln(conn, msg)
+	}
 }
 
 func main() {
@@ -21,4 +34,8 @@ func main() {
 	//TODO Try to connect to the server
 	//TODO Start asynchronously reading and displaying messages
 	//TODO Start getting and sending user messages.
+	conn, _ := net.Dial("tcp", *addrPtr)
+	go read(conn)
+	write(conn)
+
 }
