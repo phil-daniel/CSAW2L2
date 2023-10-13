@@ -76,8 +76,9 @@ func main() {
 			// - assign a client ID
 			// - add the client to the clients channel
 			// - start to asynchronously handle messages from this client
+			client := conn
 			clients[currId] = conn
-			go handleClient(conn, currId, msgs)
+			go handleClient(client, currId, msgs)
 			currId++
 		case msg := <-msgs:
 			//TODO Deal with a new message
